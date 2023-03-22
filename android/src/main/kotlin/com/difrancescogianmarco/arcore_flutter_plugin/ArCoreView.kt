@@ -232,12 +232,12 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
                 onResume()
             }
 
-//            "hitTest" -> {
-//                val map = call.arguments as HashMap<String, Any>
-//                val x = map["x"] as Int
-//                val y = map["y"] as Int
-//                hitTest(x,y,result)
-//            }
+            "hitTest" -> {
+                val map = call.arguments as HashMap<String, Any>
+                val x = map["x"] as Int
+                val y = map["y"] as Int
+                hitTest(x,y,result)
+            }
             "getTrackingState" -> {
                 debugLog("1/3: Requested tracking state, returning that back to Flutter now")
 
