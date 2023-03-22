@@ -448,14 +448,11 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
 //    }
 
     fun hitTest(x: Float,y:Float,result: MethodChannel.Result) {
-
-
         val frame =
                 try {
                     arSceneView?.arFrame
                 } catch (e: CameraNotAvailableException) {
                     Log.e(TAG, "Camera not available during onDrawFrame", e)
-                    showError("Camera not available. Try restarting the app.")
                     return
                 }
 
@@ -473,7 +470,6 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
             debugLog("No hit Test")
         }
     }
-
     fun addNodeWithAnchor(flutterArCoreNode: FlutterArCoreNode, result: MethodChannel.Result) {
 
         if (arSceneView == null) {
