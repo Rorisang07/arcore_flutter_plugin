@@ -275,5 +275,5 @@ class ArCoreController {
     }
   }
 }
-}
+
 
