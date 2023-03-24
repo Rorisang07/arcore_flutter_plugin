@@ -378,7 +378,8 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
 
 //        val now = LocalDateTime.now()
 //        now.format(DateTimeFormatter.ofPattern("M/d/y H:m:ss"))
-        val now = "rawScreenshot"
+        val unixTime = System.currentTimeMillis()
+        val now = "rawScreenshot_$unixTime"
         // android/data/com.hswo.mvc_2021.hswo_mvc_2021_flutter_ar/files/
         // activity.applicationContext.getFilesDir().toString() //doesnt work!!
         // Environment.getExternalStorageDirectory()
