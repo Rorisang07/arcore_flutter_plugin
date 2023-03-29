@@ -234,8 +234,8 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
 
             "hitTest" -> {
                 val map = call.arguments as HashMap<String, Any>
-                val x: Float = map["x"]!!.toFloat()
-                val y: Float = map["y"]!!.toFloat()
+                val x: Float = map["x"] as Float
+                val y: Float = map["y"] as Float
                 hitTest(x,y,result)
             }
             "getTrackingState" -> {
