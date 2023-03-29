@@ -448,7 +448,7 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
 //        }
 //    }
 
-    fun hitTest(x: Double,y:Double,result: MethodChannel.Result) {
+    fun hitTest(x: Float,y:Float,result: MethodChannel.Result) {
         val frame =
                 try {
                     arSceneView?.arFrame
