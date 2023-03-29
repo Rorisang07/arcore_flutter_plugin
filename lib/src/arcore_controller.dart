@@ -275,7 +275,7 @@ class ArCoreController {
   //   }
   // }
 
-  Future<List<ArCoreHitTestResult>> hitTest(double x, double y) async {
+  Future<List<ArCoreHitTestResult>> hitTest( x, y) async {
     assert(x > 0 && y > 0);
     final results = await _channel.invokeMethod('hitTest', {'x': x, 'y': y});
     if (results == null) {
