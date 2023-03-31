@@ -9,6 +9,8 @@ import 'package:meta/meta.dart';
 import 'arcore_hit_test_result.dart';
 import 'arcore_node.dart';
 import 'arcore_plane.dart';
+import 'dart:convert';
+
 
 typedef StringResultHandler = void Function(String text);
 typedef UnsupportedHandler = void Function(String text);
@@ -93,7 +95,8 @@ class ArCoreController {
           final List<dynamic> input = call.arguments;
           final objects = input
               .cast<Map<dynamic, dynamic>>()
-              .map<ArCoreHitTestResult>(
+              .map<
+              ArCoreHitTestResult>(
                   (Map<dynamic, dynamic> h) => ArCoreHitTestResult.fromMap(h))
               .toList();
           onPlaneTap!(objects);
@@ -264,9 +267,10 @@ class ArCoreController {
     return path;
   }
 
+
   // Future<List<ArCoreHitTestResult>> hitTest(double x, double y) async {
   //   assert(x > 0 && y > 0);
-  //   final results = await _channel.invokeListMethod('hitTest', {'x': x, 'y': y});
+  //   final results = await _channel.invokeMethod('hitTest', {'x': x, 'y': y});
   //   if (results == null) {
   //     return [];
   //   } else {
@@ -277,14 +281,20 @@ class ArCoreController {
 
   Future<List<ArCoreHitTestResult>> hitTest(double x, double y) async {
     assert(x > 0 && y > 0);
-    final results = await _channel.invokeMethod('hitTest', {'x': x, 'y': y});
+    dynamic results = await _channel.invokeMethod('hitTest', {'x': x, 'y': y});
     if (results == null) {
       return [];
-    } else {
-      final objects = (results as List).map((e) => ArCoreHitTestResult.fromMap(e)).toList();
-      return objects;
+    } else if (results is String) {
+      print("Result is type String ${results}");
+      results = json.decode(results);
     }
+
+    final objects = (results as List).map((e) => ArCoreHitTestResult.fromMap(e)).toList();
+    return objects;
   }
+
+
+
 }
 
 

@@ -234,10 +234,11 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
 
             "hitTest" -> {
                 val map = call.arguments as HashMap<String, Any>
-                val x = (map["x"] as String)!!.toFloat()
-                val y = (map["y"] as String)!!.toFloat()
-                hitTest(x,y,result)
+                val x = map["x"] as Double
+                val y = map["y"] as Double
+                hitTest(x.toFloat(),y.toFloat(),result)
             }
+
             "getTrackingState" -> {
                 debugLog("1/3: Requested tracking state, returning that back to Flutter now")
 
@@ -430,47 +431,53 @@ class ArCoreView(val activity: Activity, context: Context, messenger: BinaryMess
         result.success(null)
     }
 
-//    private fun screenShot() {
-//        val view = arSceneView!!
-//        // Next, create a Bitmap to hold the snapshot
-//        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-//
-//// Finally, call the ArSceneView's `getSnapshot()` method to capture the current frame
-//        view.getSnapshot { snapshot ->
-//            // When the snapshot is ready, save it to the Bitmap
-//            snapshot?.let {
-//                val buffer = snapshot.buffer
-//                buffer.rewind()
-//                bitmap.copyPixelsFromBuffer(buffer)
-//                debugLog(" bitmap ${ bitmap.copyPixelsFromBuffer(buffer)}")
-//            }
-//
-//        }
-//    }
+    fun hitTest(x: Float, y: Float, result: MethodChannel.Result) {
+        val frame = try {
+            arSceneView?.arFrame
+        } catch (e: CameraNotAvailableException) {
+            Log.e(TAG, "Camera not available during onDrawFrame", e)
+            return
+        }
 
-    fun hitTest(x: Float,y:Float,result: MethodChannel.Result) {
-        val frame =
-                try {
-                    arSceneView?.arFrame
-                } catch (e: CameraNotAvailableException) {
-                    Log.e(TAG, "Camera not available during onDrawFrame", e)
-                    return
-                }
+        // Perform hit test
+        val hitTest = frame?.hitTest(x, y)
 
-        if (x != null || x != null) {
-            Log.i(TAG, "X and Y results 1:\n$x \n$y")
-
-            // First hit test
-            val hitTest1 = frame?.hitTest(x, y)
-            Log.i(TAG, "Hit test results 1:\n$hitTest1")
+        if (hitTest != null && hitTest.isNotEmpty()) {
+            // Convert hit test results to JSON
             val gson = Gson()
-            val json = gson.toJson(hitTest1)
-            return result.success(json)
+            val json = gson.toJson(hitTest)
 
+            // Return success result to Flutter client
+            result.success(json)
         } else {
-            debugLog("No hit Test")
+            // No hits detected, return error result to Flutter client
+            debugLog("No hit Test DETECTED")
+        // result.error("NO_HITS", "No hits detected", null)
         }
     }
+//    fun hitTest(x: Float,y:Float,result: MethodChannel.Result) {
+//        val frame =
+//                try {
+//                    arSceneView?.arFrame
+//                } catch (e: CameraNotAvailableException) {
+//                    Log.e(TAG, "Camera not available during onDrawFrame", e)
+//                    return
+//                }
+//
+//        if (x != null || x != null) {
+//            Log.i(TAG, "X and Y results 1:\n$x \n$y")
+//
+//            // First hit test
+//            val hitTest1 = frame?.hitTest(x, y)
+//            Log.i(TAG, "Hit test results 1:\n$hitTest1")
+//            val gson = Gson()
+//            val json = gson.toJson(hitTest1)
+//            return result.success(json)
+//
+//        } else {
+//            debugLog("No hit Test")
+//        }
+//    }
     fun addNodeWithAnchor(flutterArCoreNode: FlutterArCoreNode, result: MethodChannel.Result) {
 
         if (arSceneView == null) {
